@@ -3,6 +3,9 @@ from django.urls import path, include
 from rest_framework.schemas import get_schema_view
 from django.views.generic import TemplateView
 
+# from django.conf.urls import url
+# from recipeapp import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('recipeapp.urls')),
