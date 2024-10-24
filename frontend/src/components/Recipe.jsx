@@ -6,26 +6,36 @@ import axios from "axios";
 
 const Recipe = () => {
     const {id} = useParams();
-    const [recipe, setRecipe] = useState([])
+    const [recipe, setRecipe] = useState(null)
     
   
     useEffect(() => {
-      axios.get("http://127.0.0.1:8000/recipe/${id}")
-      .then(res => {
-        console.log(res.data)
-        setRecipe(res.data)
-      })
-      .catch(err => console.log(err.message))
-    }, [])
+      const fetchRecipe = async () => {
+        try {
+          const response = await axios.get(`http://127.0.0.1:8000/api/recipe/${id}`);
+          setRecipe(response.data);
+        } catch (error) {
+          console.error(`Ошибка загрузки рецепта ${id}:`, error);
+        }
+      };
+  
+      fetchRecipe();
+    }, [id]); 
+  
+    if (!recipe) {
+      return <div>Здесь пока нет рецептов</div>;
+    }
+  
+    return (
+      <div>
+        <h1>{recipe.title}</h1>
+        <p>{recipe.text}</p>
+      </div>
+    );
+  };
+  
+  export default Recipe;
 
-    return(
-        <div className="container mx-auto mt-8 mb-8 px-4 flex flex-wrap justify-evenly bg-red-100 p-10">
-            <div className="self-center text-2xl font-bold whitespace-nowrap dark:text-white"> 
-              <h2 className="p30">{Recipe.title}</h2>
-              <h3 className="bg-grey-200 text-black">{Recipe.text}</h3>
-            </div>
-        </div>
-    )
-}
 
-export default Recipe
+
+
