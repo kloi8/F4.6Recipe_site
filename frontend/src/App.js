@@ -1,8 +1,7 @@
-// import axios from 'axios'
 import react from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Category from './components/Category'
-// import NavBar from './components/NavBar'
+import NavBar from './components/NavBar'
 import Recipe from './components/Recipe'
 import RecipeList from './components/RecipeList'
 
@@ -37,14 +36,14 @@ import RecipeList from './components/RecipeList'
 
 function App() {
 
-  
+
   return (
     <Router>
+      <NavBar />
       <Routes>
-        <Route path = "recipe/category" element={<Category/>}/>
-        <Route path = "/recipe/:id" element={<Recipe/>}/>
-        <Route path = "/" element={<RecipeList/>}/>
-
+        <Route path = "/recipe/category" element={<Category />}/>
+        <Route path = "/recipe/:id" element={<Recipe />}/>
+        <Route path = "/recipe" element={<RecipeList />}/>
 
       </Routes>
     </Router>

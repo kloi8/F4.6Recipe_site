@@ -1,32 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 // import { withRouter } from "react-router";
 
-const Categories = () => {
-  const [data, setData] = useState([])
-
-      useEffect(() => {
-        fetch("http://localhost:8000/api/recipe/category")
-          .then(data => data.json())
-          .then(response => setData(response))
-          .catch(error => console.log(error))
-      }, []);
 
 
-        return(
+const Category = () => {
+  const navigate = useNavigate();
+  const [category, setCategory] = useState([]);
 
-            {data.map((category, index) => ( // Использование index в качестве ключа (если нет уникального ID)
-          <div key={index}>{category}</div>
-        ))}
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/recipe/category'); 
+        setCategory(response.data); 
+      } catch (error) {
+        console.error('Ошибка загрузки категорий:', error);
+      }
+    };
 
-        )
-}
+    fetchCategory();
+  }, []); 
 
-export default Category
+  return (
+    <div>
+      <h1>Категории</h1>
+      {category.map(category => (
+        <div key={category.id}> 
+        {/* index - если нет уникального ключа */}
+          <h2>{category.title}</h2>
+          <button onClick={() => navigate(`/recipe/category/${category.id}`)}>
+              Посмотреть рецепты
+            </button>
+          {/* <a href={`/recipe/recipe?category=${category.index}` }>Посмотреть рецепты</a> */}
+        </div>
+      ))
+      }
+    </div>
+  );
+};
 
-
+export default Category;
 
 
 

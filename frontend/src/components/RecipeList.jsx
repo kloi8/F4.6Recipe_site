@@ -1,30 +1,50 @@
 import React, { useEffect, useState } from "react";
-// import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+// import RecipeList from './RecipeList';
+import { Link, useLocation } from 'react-router-dom';
 import axios from "axios";
 // import { withRouter } from "react-router";
 
 const RecipeList = () => {
-    // const {id} = useParams();
-    const [recipes, setRecipes] = useState([])
+    const location = useLocation();
+    // const queryString = new URLSearchParams(location.search);
+    const categoryId = parseInt(location.pathname.split('/').pop());
+    // const categoryId = queryString.get('category');
     
+    // const { categoryId } = useParams();
+    const [recipe, setRecipe] = useState([]);
   
     useEffect(() => {
-      axios.get("http://127.0.0.1:8000/recipe/")
-      .then(res => {
-        console.log(res.data)
-        setRecipes(res.data)
-      })
-      .catch(err => console.log(err.message))
-    }, [])
+      const fetchRecipe = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/recipe/');
+            setRecipe(response.datafilter(recipe => recipe.categoryId === categoryId));
+            } catch (error) {
+              console.error('Ошибка загрузки рецептов:', error);
+            }
+            // let url = 'http://127.0.0.1:8000/api/recipe';
+            // if (categoryId) {
+            //     url += `?category=${categoryId}`;
+        };
 
-    return(
-        <div className="container mx-auto mt-8 mb-8 px-4 flex flex-wrap justify-evenly bg-red-100 p-10">
-            {/* <div className="self-center text-2xl font-bold whitespace-nowrap dark:text-white"> 
-              <h2 className="p30">{Recipe.title}</h2>
-              <h3 className="bg-grey-200 text-black">{Recipe.text}</h3>
-            </div> */}
-        </div>
-    )
+        fetchRecipe();
+    }, [location.pathname]);
+         
+  
+    return (
+    <div>
+        <h1>Список рецептов</h1>
+        {recipe.map(recipe => (
+            <div key={recipe.id}>
+                <Link to={`/recipe/${recipe.id}`}>{recipe.title}</Link>
+            </div>
+        ))}
+    </div>
+    );
 }
+  
+  
+  export default RecipeList;
 
-export default RecipeList
+
+
